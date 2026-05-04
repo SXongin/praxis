@@ -54,9 +54,7 @@ mod tests {
             .chat(
                 vec![Message {
                     role: crate::protocol::Role::User,
-                    content: vec![ContentBlock::Text {
-                        text: "hi".into(),
-                    }],
+                    content: vec![ContentBlock::Text { text: "hi".into() }],
                 }],
                 vec![],
             )

@@ -1,5 +1,5 @@
-use crate::protocol::{ContentBlock, Message, Role};
 use crate::protocol::ToolDef;
+use crate::protocol::{ContentBlock, Message, Role};
 use crate::providers::Provider;
 use crate::providers::ProviderError;
 
@@ -40,9 +40,11 @@ pub async fn run_with_tools<P: Provider>(
         let tool_calls: Vec<_> = blocks
             .iter()
             .filter_map(|b| match b {
-                ContentBlock::ToolCall { id, name, arguments } => {
-                    Some((id.clone(), name.clone(), arguments.clone()))
-                }
+                ContentBlock::ToolCall {
+                    id,
+                    name,
+                    arguments,
+                } => Some((id.clone(), name.clone(), arguments.clone())),
                 _ => None,
             })
             .collect();
@@ -117,8 +119,9 @@ mod tests {
                 &self,
                 messages: Vec<Message>,
                 _tools: Vec<ToolDef>,
-            ) -> impl std::future::Future<Output = Result<crate::providers::ChatStream, ProviderError>> + Send
-            {
+            ) -> impl std::future::Future<
+                Output = Result<crate::providers::ChatStream, ProviderError>,
+            > + Send {
                 async move {
                     let last_role = messages.last().map(|m| &m.role);
                     let blocks = match last_role {
@@ -159,8 +162,14 @@ mod tests {
         assert_eq!(result[1].role, Role::Assistant);
         assert_eq!(result[2].role, Role::Tool);
         assert_eq!(result[3].role, Role::Assistant);
-        assert!(matches!(result[1].content[0], ContentBlock::ToolCall { .. }));
-        assert!(matches!(result[2].content[0], ContentBlock::ToolResult { .. }));
+        assert!(matches!(
+            result[1].content[0],
+            ContentBlock::ToolCall { .. }
+        ));
+        assert!(matches!(
+            result[2].content[0],
+            ContentBlock::ToolResult { .. }
+        ));
         assert_eq!(
             result[3].content[0],
             ContentBlock::Text {

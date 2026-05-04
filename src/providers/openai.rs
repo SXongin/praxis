@@ -200,8 +200,7 @@ impl Provider for OpenAiProvider {
                                             for tc in tool_calls {
                                                 let idx = tc.index;
                                                 while tool_call_buf.len() <= idx {
-                                                    tool_call_buf
-                                                        .push(ToolCallAccum::default());
+                                                    tool_call_buf.push(ToolCallAccum::default());
                                                 }
                                                 let buf = &mut tool_call_buf[idx];
                                                 if let Some(id) = tc.id {
@@ -229,9 +228,7 @@ impl Provider for OpenAiProvider {
                 return Ok(stream);
             }
 
-            Err(last_error.unwrap_or_else(|| {
-                ProviderError::Other("max retries exceeded".into())
-            }))
+            Err(last_error.unwrap_or_else(|| ProviderError::Other("max retries exceeded".into())))
         }
     }
 }
@@ -258,16 +255,13 @@ mod tests {
             .mount(&server)
             .await;
 
-        let provider = OpenAiProvider::new("test-key".into())
-            .with_base_url(server.uri());
+        let provider = OpenAiProvider::new("test-key".into()).with_base_url(server.uri());
 
         let stream = provider
             .chat(
                 vec![Message {
                     role: Role::User,
-                    content: vec![ContentBlock::Text {
-                        text: "hi".into(),
-                    }],
+                    content: vec![ContentBlock::Text { text: "hi".into() }],
                 }],
                 vec![],
             )
@@ -303,8 +297,7 @@ mod tests {
             .mount(&server)
             .await;
 
-        let provider = OpenAiProvider::new("test-key".into())
-            .with_base_url(server.uri());
+        let provider = OpenAiProvider::new("test-key".into()).with_base_url(server.uri());
 
         let stream = provider
             .chat(
@@ -362,16 +355,13 @@ mod tests {
             .mount(&server)
             .await;
 
-        let provider = OpenAiProvider::new("test-key".into())
-            .with_base_url(server.uri());
+        let provider = OpenAiProvider::new("test-key".into()).with_base_url(server.uri());
 
         let stream = provider
             .chat(
                 vec![Message {
                     role: Role::User,
-                    content: vec![ContentBlock::Text {
-                        text: "hi".into(),
-                    }],
+                    content: vec![ContentBlock::Text { text: "hi".into() }],
                 }],
                 vec![],
             )
@@ -389,16 +379,18 @@ mod tests {
         let result = rt.block_on(provider.chat(
             vec![Message {
                 role: Role::User,
-                content: vec![ContentBlock::Text {
-                    text: "hi".into(),
-                }],
+                content: vec![ContentBlock::Text { text: "hi".into() }],
             }],
             vec![],
         ));
         match result {
             Err(e) => {
                 let msg = e.to_string();
-                assert!(msg.contains("API key") || msg.contains("401"), "expected auth error, got: {}", msg);
+                assert!(
+                    msg.contains("API key") || msg.contains("401"),
+                    "expected auth error, got: {}",
+                    msg
+                );
             }
             Ok(_) => panic!("expected error"),
         }

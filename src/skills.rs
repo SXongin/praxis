@@ -69,10 +69,7 @@ pub fn parse_skill(content: &str) -> Result<Skill, SkillError> {
     })
 }
 
-pub fn inject_skills_into_prompt(
-    system_prompt: &str,
-    skills: &[Skill],
-) -> String {
+pub fn inject_skills_into_prompt(system_prompt: &str, skills: &[Skill]) -> String {
     if skills.is_empty() {
         return system_prompt.to_string();
     }

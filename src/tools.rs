@@ -50,11 +50,7 @@ impl ToolRegistry {
             .collect()
     }
 
-    pub async fn execute(
-        &self,
-        name: &str,
-        args: serde_json::Value,
-    ) -> Result<String, ToolError> {
+    pub async fn execute(&self, name: &str, args: serde_json::Value) -> Result<String, ToolError> {
         let tool = self
             .get(name)
             .ok_or_else(|| ToolError::NotFound(name.to_string()))?;
