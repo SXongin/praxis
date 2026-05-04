@@ -8,7 +8,11 @@ pub fn estimate_tokens(messages: &[Message]) -> usize {
                 ContentBlock::Text { text } => {
                     total += text.len() / 4 + 1;
                 }
-                ContentBlock::ToolCall { id, name, arguments } => {
+                ContentBlock::ToolCall {
+                    id,
+                    name,
+                    arguments,
+                } => {
                     total += (id.len() + name.len() + arguments.len()) / 4 + 3;
                 }
                 ContentBlock::ToolResult {

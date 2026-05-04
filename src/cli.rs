@@ -15,10 +15,7 @@ pub struct Args {
     #[arg(long, help = "List saved sessions")]
     pub list_sessions: bool,
 
-    #[arg(
-        long,
-        help = "OpenAI API key (or set OPENAI_API_KEY env var)"
-    )]
+    #[arg(long, help = "OpenAI API key (or set OPENAI_API_KEY env var)")]
     pub api_key: Option<String>,
 }
 

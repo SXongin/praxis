@@ -65,8 +65,7 @@ pub async fn run(args: crate::cli::Args) {
         .filter(|s| profile.skills.contains(&s.name))
         .collect();
 
-    let system_prompt =
-        skills::inject_skills_into_prompt(&profile.system_prompt, &selected_skills);
+    let system_prompt = skills::inject_skills_into_prompt(&profile.system_prompt, &selected_skills);
 
     let messages = if let Some(session_id) = &args.session {
         match crate::session::load_session(session_id, &crate::session::default_sessions_dir()) {
@@ -101,12 +100,18 @@ pub async fn run(args: crate::cli::Args) {
         let tools = registry.definitions();
         let max_tokens = profile.max_tokens.unwrap_or(120_000);
         let _trimmed = context::trim_messages(messages.clone(), max_tokens);
-        engine::run_with_tools(&provider, _trimmed, tools, &registry, profile.max_iterations)
-            .await
-            .unwrap_or_else(|e| {
-                eprintln!("Provider error: {}", e);
-                std::process::exit(1);
-            })
+        engine::run_with_tools(
+            &provider,
+            _trimmed,
+            tools,
+            &registry,
+            profile.max_iterations,
+        )
+        .await
+        .unwrap_or_else(|e| {
+            eprintln!("Provider error: {}", e);
+            std::process::exit(1);
+        })
     } else {
         let provider = StubProvider;
         engine::run_with_tools(
@@ -128,7 +133,9 @@ pub async fn run(args: crate::cli::Args) {
             for block in &msg.content {
                 match block {
                     ContentBlock::Text { text } => println!("{}", text),
-                    ContentBlock::ToolCall { name, arguments, .. } => {
+                    ContentBlock::ToolCall {
+                        name, arguments, ..
+                    } => {
                         println!("🔧 Running {}: {}", name, arguments);
                     }
                     ContentBlock::ToolResult { name, content, .. } => {
