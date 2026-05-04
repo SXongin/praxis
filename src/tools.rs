@@ -58,6 +58,12 @@ impl ToolRegistry {
     }
 }
 
+impl Default for ToolRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 pub struct BashTool;
 
 impl Tool for BashTool {

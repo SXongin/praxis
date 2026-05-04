@@ -7,6 +7,7 @@ pub mod openai;
 
 pub type ChatStream = Pin<Box<dyn Stream<Item = ContentBlock> + Send>>;
 
+#[allow(clippy::manual_async_fn)]
 pub trait Provider {
     fn chat(
         &self,
@@ -25,6 +26,7 @@ pub enum ProviderError {
 
 pub struct StubProvider;
 
+#[allow(clippy::manual_async_fn)]
 impl Provider for StubProvider {
     fn chat(
         &self,

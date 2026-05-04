@@ -115,6 +115,7 @@ mod tests {
         struct ToolCallProvider;
 
         impl Provider for ToolCallProvider {
+            #[allow(clippy::manual_async_fn)]
             fn chat(
                 &self,
                 messages: Vec<Message>,

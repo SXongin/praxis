@@ -55,10 +55,10 @@ pub fn list_profiles(dir: &std::path::Path) -> Result<Vec<String>, ProfileError>
     for entry in std::fs::read_dir(dir)? {
         let entry = entry?;
         let path = entry.path();
-        if path.extension().map(|e| e == "yaml").unwrap_or(false) {
-            if let Some(stem) = path.file_stem().and_then(|s| s.to_str()) {
-                names.push(stem.to_string());
-            }
+        if path.extension().map(|e| e == "yaml").unwrap_or(false)
+            && let Some(stem) = path.file_stem().and_then(|s| s.to_str())
+        {
+            names.push(stem.to_string());
         }
     }
     names.sort();

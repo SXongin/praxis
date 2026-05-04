@@ -107,6 +107,7 @@ struct ToolCallAccum {
     arguments: String,
 }
 
+#[allow(clippy::manual_async_fn)]
 impl Provider for OpenAiProvider {
     fn chat(
         &self,
@@ -191,10 +192,10 @@ impl Provider for OpenAiProvider {
                             if let Ok(parsed) = serde_json::from_str::<ChatChunk>(data) {
                                 for choice in parsed.choices {
                                     if let Some(delta) = choice.delta {
-                                        if let Some(text) = delta.content {
-                                            if !text.is_empty() {
-                                                let _ = tx.send(ContentBlock::Text { text });
-                                            }
+                                        if let Some(text) = delta.content
+                                            && !text.is_empty()
+                                        {
+                                            let _ = tx.send(ContentBlock::Text { text });
                                         }
                                         if let Some(tool_calls) = delta.tool_calls {
                                             for tc in tool_calls {

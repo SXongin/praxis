@@ -7,9 +7,16 @@ use crate::skills;
 use crate::tools::{BashTool, ToolRegistry};
 
 pub fn resolve_api_key(args: &crate::cli::Args) -> Option<String> {
+    resolve_api_key_with(args, |key| std::env::var(key).ok())
+}
+
+pub fn resolve_api_key_with(
+    args: &crate::cli::Args,
+    env_lookup: impl Fn(&str) -> Option<String>,
+) -> Option<String> {
     args.api_key
         .clone()
-        .or_else(|| std::env::var("OPENAI_API_KEY").ok())
+        .or_else(|| env_lookup("OPENAI_API_KEY"))
 }
 
 pub async fn run(args: crate::cli::Args) {
@@ -182,7 +189,6 @@ mod tests {
 
     #[test]
     fn api_key_from_env_var_fallback() {
-        unsafe { std::env::set_var("OPENAI_API_KEY", "sk-env") };
         let args = crate::cli::Args {
             profile: None,
             session: None,
@@ -190,13 +196,18 @@ mod tests {
             list_sessions: false,
             api_key: None,
         };
-        assert_eq!(resolve_api_key(&args), Some("sk-env".into()));
-        unsafe { std::env::remove_var("OPENAI_API_KEY") };
+        let env = |key: &str| {
+            if key == "OPENAI_API_KEY" {
+                Some("sk-env".into())
+            } else {
+                None
+            }
+        };
+        assert_eq!(resolve_api_key_with(&args, env), Some("sk-env".into()));
     }
 
     #[test]
     fn api_key_missing_both() {
-        unsafe { std::env::remove_var("OPENAI_API_KEY") };
         let args = crate::cli::Args {
             profile: None,
             session: None,
@@ -204,12 +215,11 @@ mod tests {
             list_sessions: false,
             api_key: None,
         };
-        assert_eq!(resolve_api_key(&args), None);
+        assert_eq!(resolve_api_key_with(&args, |_| None), None);
     }
 
     #[test]
     fn cli_arg_takes_priority_over_env() {
-        unsafe { std::env::set_var("OPENAI_API_KEY", "sk-env") };
         let args = crate::cli::Args {
             profile: None,
             session: None,
@@ -217,7 +227,13 @@ mod tests {
             list_sessions: false,
             api_key: Some("sk-cli".into()),
         };
-        assert_eq!(resolve_api_key(&args), Some("sk-cli".into()));
-        unsafe { std::env::remove_var("OPENAI_API_KEY") };
+        let env = |key: &str| {
+            if key == "OPENAI_API_KEY" {
+                Some("sk-env".into())
+            } else {
+                None
+            }
+        };
+        assert_eq!(resolve_api_key_with(&args, env), Some("sk-cli".into()));
     }
 }
