@@ -1,3 +1,10 @@
-pub fn run() {
-    println!("Praxis — personal AI agent framework");
-}
+pub mod protocol;
+pub mod providers;
+pub mod engine;
+pub mod tools;
+pub mod profile;
+pub mod skills;
+pub mod session;
+pub mod context;
+pub mod core;
+pub mod cli;
