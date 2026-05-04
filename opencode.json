@@ -1,5 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "ensure-newline": {
+      "command": ["/root/.config/opencode/ensure-trailing-newline.sh", "$FILE"],
+      "extensions": [".rs", ".md", ".toml", ".json", ".yaml", ".yml", ".txt", ".sh", ".py", ".ts", ".js", ".css", ".html", ".xml", ".gitignore", ".dockerignore", ".env"]
+    }
+  },
   "permission": {
     "bash": {
       "*": "ask",
