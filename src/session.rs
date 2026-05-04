@@ -81,10 +81,10 @@ pub fn list_sessions(dir: &std::path::Path) -> Result<Vec<SessionMeta>, SessionE
         let path = entry.path();
         if path.extension().map(|e| e == "jsonl").unwrap_or(false) {
             let content = std::fs::read_to_string(&path)?;
-            if let Some(first_line) = content.lines().next() {
-                if let Ok(meta) = serde_json::from_str::<SessionMeta>(first_line) {
-                    sessions.push(meta);
-                }
+            if let Some(first_line) = content.lines().next()
+                && let Ok(meta) = serde_json::from_str::<SessionMeta>(first_line)
+            {
+                sessions.push(meta);
             }
         }
     }
