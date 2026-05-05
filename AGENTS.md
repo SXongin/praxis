@@ -14,7 +14,7 @@ Single-context layout: one `CONTEXT.md` + `docs/adr/` at repo root. See `docs/ag
 
 ### Branch conventions
 
-GitHub Flow with tiered merge policy. See `docs/agents/branch-conventions.md`.
+GitHub Flow with rebase merge policy. See `docs/agents/branch-conventions.md`.
 
 ### Pre-commit hook
 
