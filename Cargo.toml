@@ -3,6 +3,7 @@ name = "praxis"
 version = "0.1.0"
 edition = "2024"
 description = "Personal AI agent framework: LLM + ReAct loop + pluggable skills/tools"
+license = "MIT"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
