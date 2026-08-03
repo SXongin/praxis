@@ -49,5 +49,5 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: opensource-nepal/commitlint@v1
+      - uses: opensource-nepal/commitlint@v2
 
